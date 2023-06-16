@@ -102,3 +102,70 @@ grafico <- ggplot(data = dados_por_municipio_sexo, aes(x = CODMUNIC, y = Numero_
 
 # Exibir o gráfico
 print(grafico)
+
+
+library(dplyr)
+library(ggplot2)
+
+# Importe os dados para o ambiente de trabalho em R, substituindo "seus_dados" pelo nome do seu conjunto de dados
+dados <- Mortalidade_Geral_2000
+
+# Calcule o número de óbitos por "LOCOCOR" e sexo
+contagem <- dados %>% count(LOCOCOR, SEXO)
+
+# Ordene os dados pela contagem de óbitos em ordem decrescente para cada sexo
+contagem <- contagem %>% arrange(desc(n))
+
+# Crie um gráfico de barras para visualizar os resultados
+grafico <- ggplot(contagem, aes(x = LOCOCOR, y = n, fill = SEXO)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "LOCOCOR", y = "Número de Óbitos", fill = "Sexo") +
+  ggtitle("Local com Maior Número de Óbitos por Sexo em 2000") +
+  theme_minimal()
+
+# Visualize o gráfico
+print(grafico)
+
+
+
+library(ggplot2)
+
+# Criar um data frame com os dados de exemplo
+dados <- data.frame(
+  sexo = c("Masculino", "Feminino", "Masculino", "Feminino", "Masculino"),
+  localizacao = c("Hospitais", "Vias Públicas", "Outros Estabelecimentos", "Domicílio", "Ignorados")
+)
+
+# Criar o gráfico de barras empilhadas
+ggplot(data = dados, aes(x = sexo, fill = localizacao)) +
+  geom_bar(position = "stack") +
+  labs(title = "Distribuição de Sexo por Localização do Óbito",
+       x = "Sexo",
+       y = "Contagem") +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"))
+
+
+
+# Suponha que você tenha um conjunto de dados chamado "dados" com as informações necessárias
+# Certifique-se de que as colunas "DataObito", "Sexo", "Idade", "Localização do Obito" e "Municípios" estejam presentes no conjunto de dados
+
+# Converta a variável "DataObito" para um formato numérico adequado
+Mortalidade_Geral_2000$DTOBITO <- as.numeric(Mortalidade_Geral_2000$DTOBITO)
+
+# Converta a variável "Sexo" para um formato numérico adequado
+Mortalidade_Geral_2000$SEXO <- as.numeric(Mortalidade_Geral_2000$SEXO)
+
+# Converta a variável "Idade" para um formato numérico adequado
+Mortalidade_Geral_2000$IDADE <- as.numeric(Mortalidade_Geral_2000$IDADE)
+
+# Converta a variável "Localização do Obito" para um formato numérico adequado
+Mortalidade_Geral_2000$LOCOCOR <- as.numeric(Mortalidade_Geral_2000$LOCOCOR)
+
+# Converta a variável "Municípios" para um formato numérico adequado
+#Mortalidade_Geral_2000$ <- as.numeric(dados$Municipios)
+
+# Realize a regressão linear
+modelo <- lm(DTOBITO ~ SEXO + IDADE + LOCOCOR, data = Mortalidade_Geral_2000)
+
+# Exiba os resultados da regressão
+summary(modelo)
